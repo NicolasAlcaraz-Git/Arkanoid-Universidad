@@ -1,35 +1,31 @@
-export default class Paddle {
+import Brick from "./Brick.js";
+
+export default class Paddle extends Brick {
   constructor(scene, x, y) {
-    this.scene = scene;
-    this.sprite = scene.add.rectangle(x, y, 150, 20, 0x00ff00);
-    scene.physics.add.existing(this.sprite, true);
-    // Los cursores se crean aquí, propios de la paleta
+    // modifica el recangulo con tamaño y color propios
+    super(scene, x, y, 150, 20, 0x00ff00, false);
+
+    // la barra queda inmobil por colisiones
+    this.body.setImmovable(true);
+
+    // controles del teclado
     this.cursors = scene.input.keyboard.createCursorKeys();
   }
 
   update() {
+    // movimiento lateral con flechas
     if (this.cursors.left.isDown) {
-      this.moveLeft();
+      this.sprite.x -= 10;
     } else if (this.cursors.right.isDown) {
-      this.moveRight();
+      this.sprite.x += 10;
     }
+
+    // restringir la barra a la pantalla
     this.constrain(75, 725);
-    if (this.ball.sprite.y > this.game.config.height) {
-        this.scene.restart();
-    }
   }
 
-  moveLeft() {
-    this.sprite.x -= 5;
-  }
-
-  moveRight() {
-    this.sprite.x += 5;
-  }
-
-  constrain(min, max) {
-    if (this.sprite.x < min) this.sprite.x = min;
-    if (this.sprite.x > max) this.sprite.x = max;
-    this.sprite.body.updateFromGameObject(this.sprite);
+  constrain(minX, maxX) {
+    if (this.sprite.x < minX) this.sprite.x = minX;
+    if (this.sprite.x > maxX) this.sprite.x = maxX;
   }
 }
